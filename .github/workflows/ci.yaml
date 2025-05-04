@@ -1,0 +1,28 @@
+name: ci-js-workflow
+on: 
+  pull_request:
+    branches:
+      - develop
+jobs:
+  check-application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18
+      - name: Instalar as dependencias
+        run: npm install
+      - name: Rodar os testes
+        run: npm run test
+  sonarqube:
+      name: SonarQube
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        - name: SonarQube Scan
+          uses: SonarSource/sonarqube-scan-action@v5
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
