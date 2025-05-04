@@ -19,7 +19,7 @@ jobs:
 
       - name: Upload coverage file
         if: ${{ contains(matrix.sonarCheck, matrix.challengePath) }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: coverage
           path: ./coverage
@@ -31,7 +31,7 @@ jobs:
           with:
             fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
         - name: Download coverage
-          uses: actions/download-artifact@v4
+          uses: actions/download-artifact@v3
           with:
             name: coverage
             path: ./coverage
