@@ -18,7 +18,6 @@ jobs:
         run: npm run test
 
       - name: Upload coverage file
-        if: ${{ contains(matrix.sonarCheck, matrix.challengePath) }}
         uses: actions/upload-artifact@v4
         with:
           name: coverage
