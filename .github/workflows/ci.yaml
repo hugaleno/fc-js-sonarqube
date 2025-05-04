@@ -13,7 +13,7 @@ jobs:
           node-version: 18
       - name: Instalar as dependencias
         run: npm install
-      - name: Rodar os testes
+      - name: Rodar os testes gerando o coverage
         run: npm run test
   sonarqube:
       name: SonarQube
