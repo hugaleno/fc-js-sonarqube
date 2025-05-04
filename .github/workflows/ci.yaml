@@ -1,6 +1,7 @@
 name: ci-js-workflow
 on: 
   pull_request:
+    types: [opened]
     branches:
       - develop
 jobs:
