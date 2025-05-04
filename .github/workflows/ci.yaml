@@ -1,7 +1,7 @@
 name: ci-js-workflow
 on: 
   pull_request:
-    types: [opened]
+    types: [opened, synchronize, reopened]
     branches:
       - develop
 jobs:
@@ -16,6 +16,13 @@ jobs:
         run: npm install
       - name: Rodar os testes gerando o coverage
         run: npm run test
+
+      - name: Upload coverage file
+        if: ${{ contains(matrix.sonarCheck, matrix.challengePath) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: ./coverage
   sonarqube:
       name: SonarQube
       runs-on: ubuntu-latest
@@ -23,6 +30,11 @@ jobs:
         - uses: actions/checkout@v4
           with:
             fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        - name: Download coverage
+          uses: actions/download-artifact@v4
+          with:
+            name: coverage
+            path: ./coverage
         - name: SonarQube Scan
           uses: SonarSource/sonarqube-scan-action@v5
           env:
