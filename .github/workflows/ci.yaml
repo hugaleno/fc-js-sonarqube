@@ -1,27 +1,41 @@
 name: ci-js-workflow
 on: 
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
+      - main
       - develop
 jobs:
   check-application:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '20.x'
       - name: Instalar as dependencias
         run: npm install
-      - name: Rodar os testes
+      - name: Rodar os testes gerando o coverage
         run: npm run test
+
+      - name: Upload coverage file
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: ./coverage
   sonarqube:
       name: SonarQube
+      needs: check-application
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v4
           with:
             fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        - name: Download coverage
+          uses: actions/download-artifact@v4
+          with:
+            name: coverage
+            path: ./coverage
         - name: SonarQube Scan
           uses: SonarSource/sonarqube-scan-action@v5
           env:
